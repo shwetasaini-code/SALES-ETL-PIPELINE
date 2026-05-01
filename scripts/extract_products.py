@@ -15,7 +15,7 @@ def fetch_data():
 def save_data_as_json(data):
     os.makedirs("data/raw", exist_ok=True)
     with open("data/raw/product.json", "w") as f:
-       json.dump(data, f, indent=4)
+        json.dump(data, f, indent=4)
 
 data = fetch_data()
 # print(data)
