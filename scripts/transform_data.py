@@ -1,6 +1,7 @@
 import pandas as pd
 import ast as ast
 import os
+import logging
 
 def safe_parse(x):
     try:
@@ -12,12 +13,15 @@ def safe_parse(x):
         return {}
 
 def transform_data(df):
+    logging.info("Cleaning customer data !!!")
 
     # flatten rating column
     res = df["review_info"].apply(safe_parse)
     df["review_info_score"] = res.apply(lambda x: x['score'])
     df["review_info_reviews"] = res.apply(lambda x: x['reviews'])
     df.drop(columns=['review_info'], inplace=True)
+
+    logging.info("Data flattened ✔️")
 
     # clean strings
     df['name'] = df['name'].str.strip().str.title()
@@ -33,6 +37,8 @@ def transform_data(df):
     df["review_info_reviews"] = pd.to_numeric(
         df["review_info_reviews"], errors="coerce")
 
+    logging.info("Data format fixed. ✔️")
+
     # Remove rows with missing review_info_score
     df.dropna(subset=['review_info_score'], inplace=True)
 
@@ -44,6 +50,8 @@ def transform_data(df):
 
     # Remove duplicates
     df.drop_duplicates(inplace=True)
+    
+    logging.info("Duplicates Removed. ✔️")
 
     # print(df[df.isna().any(axis=1)]) #to check row which will get deleted if empty
     # print(df[df['review_info_score'].isna()]) #to check row which will get deleted if empty for specific column
@@ -51,5 +59,5 @@ def transform_data(df):
     os.makedirs('data/processed', exist_ok=True)
     df.to_csv('data/processed/customer_clean_data.csv', index=False)
 
-    print("Data cleaning completed !!!!")
+    logging.info("Data cleaning completed ✅")
     return df
