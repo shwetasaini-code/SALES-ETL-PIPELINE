@@ -51,5 +51,5 @@ def transform_data(df):
     os.makedirs('data/processed', exist_ok=True)
     df.to_csv('data/processed/customer_clean_data.csv', index=False)
 
-    print("Data cleaning completed.")
+    print("Data cleaning completed !!!!")
     return df
